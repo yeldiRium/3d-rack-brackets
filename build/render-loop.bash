@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-
 dir="$(dirname "$(realpath "$0")")"
 root="$(realpath "${dir}/..")"
 
@@ -11,6 +9,9 @@ while true; do
   changedRelativePath="$(realpath -m --relative-to="${root}" "${changed}")"
 
 	echo "change in ./${changedRelativePath}, rebuilding..."
-	devbox run render
-  echo "rebuilt."
+	if ! devbox run render; then
+		echo "failed to rebuild."
+	else
+	  echo "rebuilt."
+	fi
 done
