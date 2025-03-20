@@ -8,6 +8,8 @@
   },
   "shell": {
     "scripts": {
+      "render": "go run ./bin/main.go",
+      "build": "go build ./bin/main.go"
     }
   }
 }
