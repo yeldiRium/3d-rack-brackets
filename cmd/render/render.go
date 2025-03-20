@@ -8,10 +8,9 @@ import (
 	"os"
 	"time"
 
-	primitive "github.com/ljanyst/ghostscad/primitive"
-
 	"github.com/yeldiRium/3d-rack-brackets/bin/globals"
 	"github.com/yeldiRium/3d-rack-brackets/ghostscad"
+	"github.com/yeldiRium/3d-rack-brackets/shapes/rack"
 )
 
 type RenderCmd struct {
@@ -29,10 +28,9 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 	if err != nil {
 		return fmt.Errorf("failed to open output stream: %w", err)
 	}
-
 	bufferedOutput := bufio.NewWriter(output)
 
-	shape := primitive.NewSphere(15)
+	shape := rack.MakeRack()
 
 	ghostscad.RenderGlobals(bufferedOutput)
 	shape.Render(bufferedOutput)
