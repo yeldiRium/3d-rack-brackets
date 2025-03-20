@@ -48,6 +48,34 @@
           "store_path": "/nix/store/cfjhl0kn7xc65466pha9fkrvigw3g72n-go-1.24.1"
         }
       }
+    },
+    "inotify-tools@4.23.9.0": {
+      "last_modified": "2025-02-26T05:29:08Z",
+      "resolved": "github:NixOS/nixpkgs/3a05eebede89661660945da1f151959900903b6a#inotify-tools",
+      "source": "devbox-search",
+      "version": "4.23.9.0",
+      "systems": {
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zr34knjwfl7vjkhh5rlk44c5g85l49qq-inotify-tools-4.23.9.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/zr34knjwfl7vjkhh5rlk44c5g85l49qq-inotify-tools-4.23.9.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/1zfx7609dv3ixkckl1kkaig5n5861cbi-inotify-tools-4.23.9.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/1zfx7609dv3ixkckl1kkaig5n5861cbi-inotify-tools-4.23.9.0"
+        }
+      }
     }
   }
 }
