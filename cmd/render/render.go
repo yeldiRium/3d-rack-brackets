@@ -1,13 +1,17 @@
 package render
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"log/slog"
 	"os"
 	"time"
 
+	primitive "github.com/ljanyst/ghostscad/primitive"
+
 	"github.com/yeldiRium/3d-rack-brackets/bin/globals"
+	"github.com/yeldiRium/3d-rack-brackets/ghostscad"
 )
 
 type RenderCmd struct {
@@ -21,19 +25,35 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 		globals.Logger.Debug("done rendering", slog.Duration("elapsed", time.Since(startTime)))
 	}()
 
+	output, err := render.ChooseOutput(globals.Stdout)
+	if err != nil {
+		return fmt.Errorf("failed to open output stream: %w", err)
+	}
+
+	bufferedOutput := bufio.NewWriter(output)
+
+	shape := primitive.NewSphere(15)
+
+	ghostscad.RenderGlobals(bufferedOutput)
+	shape.Render(bufferedOutput)
+
+	bufferedOutput.Flush()
+
+	return nil
+}
+
+func (render *RenderCmd) ChooseOutput(stdout io.Writer) (io.Writer, error) {
 	var output io.Writer
 	if render.Output == "-" {
-		output = globals.Stdout
+		output = stdout
 	} else {
 		file, err := os.Create(render.Output)
 		if err != nil {
-			return fmt.Errorf("failed to open output file: %w", err)
+			return nil, fmt.Errorf("failed to open output file: %w", err)
 		}
 
 		output = file
 	}
 
-	fmt.Fprintf(output, "hello :wave:\n")
-
-	return nil
+	return output, nil
 }
