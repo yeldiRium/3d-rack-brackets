@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/alecthomas/kong"
 
 	"github.com/yeldiRium/3d-rack-brackets/bin/globals"
@@ -17,6 +19,9 @@ func main() {
 	ctx := kong.Parse(&cli,
 		kong.UsageOnError(),
 	)
-	err := ctx.Run(&globals.Globals{Debug: cli.Debug})
+	err := ctx.Run(&globals.Globals{
+		Stdout: os.Stdout,
+		Debug: cli.Debug,
+	})
 	ctx.FatalIfErrorf(err)
 }
