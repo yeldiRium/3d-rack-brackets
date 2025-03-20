@@ -76,6 +76,54 @@
           "store_path": "/nix/store/1zfx7609dv3ixkckl1kkaig5n5861cbi-inotify-tools-4.23.9.0"
         }
       }
+    },
+    "openscad@2021.01": {
+      "last_modified": "2025-03-11T17:52:14Z",
+      "resolved": "github:NixOS/nixpkgs/0d534853a55b5d02a4ababa1d71921ce8f0aee4c#openscad",
+      "source": "devbox-search",
+      "version": "2021.01",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/mbnqp4grgb7q3qns13z8078d1g2lk71q-openscad-2021.01",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/mbnqp4grgb7q3qns13z8078d1g2lk71q-openscad-2021.01"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/fnzkjqkvjasa1aab29ab1jfaal3y1spc-openscad-2021.01",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/fnzkjqkvjasa1aab29ab1jfaal3y1spc-openscad-2021.01"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/z03rjwxi93c1skxvlxjqs14imwdq0rha-openscad-2021.01",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/z03rjwxi93c1skxvlxjqs14imwdq0rha-openscad-2021.01"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4mfg5camj18q3w1j70y8x4xa814qvf39-openscad-2021.01",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/4mfg5camj18q3w1j70y8x4xa814qvf39-openscad-2021.01"
+        }
+      }
     }
   }
 }

@@ -2,7 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.10.7/.schema/devbox.schema.json",
   "packages": [
     "go@1.24.1",
-    "inotify-tools@4.23.9.0"
+    "inotify-tools@4.23.9.0",
+    "openscad@2021.01"
   ],
   "env": {
     "NIX_HARDENING_ENABLE": ""
@@ -10,8 +11,9 @@
   "shell": {
     "scripts": {
       "build":  "go build ./bin/main.go",
+      "open": "openscad ./output/output.scad",
       "render": "mkdir -p output && go run ./bin/main.go render output/output.scad",
-      "watch": "./build/render-loop.bash"
+      "watch":  "./build/render-loop.bash"
     }
   }
 }
