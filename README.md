@@ -19,3 +19,9 @@ No there's [output](./output/output.scad).
 ```
 
 Now you can edit the code and on every change the output file is re-rendered.
+
+## Preview
+
+Currently looks like this:
+
+![current state of the 3d model](./output.png)
