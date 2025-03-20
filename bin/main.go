@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log/slog"
 	"os"
 
 	"github.com/alecthomas/kong"
@@ -19,9 +20,20 @@ func main() {
 	ctx := kong.Parse(&cli,
 		kong.UsageOnError(),
 	)
+
+	logLevel := slog.LevelInfo
+	if cli.Debug {
+		logLevel = slog.LevelDebug
+	}		
+	handler := slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
+		Level: logLevel,
+	})
+	logger := slog.New(handler)
+
 	err := ctx.Run(&globals.Globals{
+		Debug:  cli.Debug,
+		Logger: logger,
 		Stdout: os.Stdout,
-		Debug: cli.Debug,
 	})
 	ctx.FatalIfErrorf(err)
 }

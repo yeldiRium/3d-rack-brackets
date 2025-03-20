@@ -3,7 +3,9 @@ package render
 import (
 	"fmt"
 	"io"
+	"log/slog"
 	"os"
+	"time"
 
 	"github.com/yeldiRium/3d-rack-brackets/bin/globals"
 )
@@ -13,8 +15,11 @@ type RenderCmd struct {
 }
 
 func (render *RenderCmd) Run(globals *globals.Globals) error {
-	fmt.Printf("debugging: %v\n", globals.Debug)
-	fmt.Printf("rendering to %v\n", render.Output)
+	globals.Logger.Debug("starting to render", slog.Bool("debug", globals.Debug), slog.String("output", render.Output))
+	startTime := time.Now()
+	defer func() {
+		globals.Logger.Debug("done rendering", slog.Duration("elapsed", time.Since(startTime)))
+	}()
 
 	var output io.Writer
 	if render.Output == "-" {
@@ -28,7 +33,7 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 		output = file
 	}
 
-	fmt.Fprintf(output, "hello :wave:")
+	fmt.Fprintf(output, "hello :wave:\n")
 
 	return nil
 }
