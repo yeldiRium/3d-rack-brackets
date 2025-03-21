@@ -11,6 +11,7 @@
   "shell": {
     "scripts": {
       "build":  "go build ./bin/main.go",
+      "dev": "./tmux.sh",
       "open": "openscad ./output/output.scad",
       "render": "mkdir -p output && go run ./bin/main.go render output/output.scad",
       "render:preview": "devbox run render && openscad -o output.png ./output/output.scad",
