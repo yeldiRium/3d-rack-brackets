@@ -36,7 +36,7 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 	}
 	bufferedOutput := bufio.NewWriter(output)
 
-	shape := rack.MakeRack()
+	shape := rack.MakeRackSegment()
 
 	ghostscad.RenderGlobals(bufferedOutput)
 	shape.Render(bufferedOutput)

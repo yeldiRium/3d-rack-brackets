@@ -1,37 +1,31 @@
 package rack
 
 import (
-	"math"
-
 	"github.com/go-gl/mathgl/mgl64"
 	"github.com/ljanyst/ghostscad/primitive"
 )
 
-func square(i float64) float64 {
-	return i * i
-}
+const (
+	SCREW_RADIUS_M6 = 3.0
+)
 
-func MakeRack() primitive.Primitive {
-	amount := 15
-	spheres := make([]primitive.Primitive, amount * amount)
+func MakeRackSegment() primitive.Primitive {
+	thickness := 10.0
+	rackSegmentWidth := 15.875
+	rackSegmentHeight := 44.45
+	distanceEdgeToHole := 6.35
 
-	diameter := 5.0
-	distance := 10.0
-	start := -float64(amount-1) / 2 * distance
-	for i := 0; i < amount; i++ {
-		for j := 0; j < amount; j++ {
-			jitter := math.Sin(math.Sqrt(square(float64(i)) + square(float64(j)))) * 15
+	spine := primitive.NewCube(mgl64.Vec3{rackSegmentWidth, thickness, rackSegmentHeight})
+	cutout := primitive.NewCylinder(thickness + 1, SCREW_RADIUS_M6)
+	orientedCutout := primitive.NewRotation(mgl64.Vec3{90, 0, 0}, cutout)
 
-			sphere := primitive.NewSphere(diameter)
-			translation := mgl64.Vec3{
-				start + distance*float64(i), start + distance*float64(j), jitter,
-			}
-			translatedSphere := primitive.NewTranslation(translation, sphere)
+	firstCutout := primitive.NewTranslation(mgl64.Vec3{0, 0, (rackSegmentHeight / 2) - distanceEdgeToHole}, orientedCutout)
+	secondCutout := orientedCutout
+	thirdCutout := primitive.NewTranslation(mgl64.Vec3{0, 0, - (rackSegmentHeight / 2) + distanceEdgeToHole}, orientedCutout)
 
-			spheres[i * amount + j] = translatedSphere
-		}
-	}
+	rackSegment := primitive.NewDifference(spine, firstCutout, secondCutout, thirdCutout)
 
-	rotation := mgl64.Vec3{0, 0, 0}
-	return primitive.NewRotation(rotation, primitive.NewList(spheres...))
+	orientedRackSegment := primitive.NewRotation(mgl64.Vec3{-90, 0, 0}, rackSegment)
+
+	return orientedRackSegment
 }
