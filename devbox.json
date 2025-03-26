@@ -15,8 +15,9 @@
       "dev": "./tmux.sh",
       "open": "openscad ./output/output.scad",
       "render": "mkdir -p output && go run ./bin/main.go render output/output.scad",
-      "render:prod": "mkdir -p output && go run ./bin/main.go render --production output/output.scad",
       "render:preview": "devbox run render:prod && openscad -o output.png ./output/output.scad",
+      "render:prod": "mkdir -p output && go run ./bin/main.go render --production output/output.scad",
+      "render:stl": "devbox run render:prod && openscad -o ./output/output.stl ./output/output.scad",
       "watch":  "./build/render-loop.bash"
     }
   }
