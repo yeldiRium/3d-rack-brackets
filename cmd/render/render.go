@@ -14,6 +14,7 @@ import (
 )
 
 type RenderCmd struct {
+	Production bool `short:"p"`
 	Output string `arg:"" type:"path" default:"-"`
 }
 
@@ -23,6 +24,11 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 	defer func() {
 		globals.Logger.Debug("done rendering", slog.Duration("elapsed", time.Since(startTime)))
 	}()
+
+	if render.Production {
+		ghostscad.SetFa(5)
+		ghostscad.SetFs(0.5)
+	}
 
 	output, err := render.ChooseOutput(globals.Stdout)
 	if err != nil {
