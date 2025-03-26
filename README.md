@@ -6,7 +6,10 @@ Learning project for 3d modelling using [OpenSCAD](https://openscad.org/) and [G
 
 ```sh
 > devbox shell
-> devbox run render
+# To get the openscad code:
+> devbox run render:prod
+# or to get the stl:
+> devbox run render:stl
 ```
 
 No there's [output](./output/output.scad).
