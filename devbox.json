@@ -11,6 +11,7 @@
   "shell": {
     "scripts": {
       "build":  "go build ./bin/main.go",
+      "doc": "xdg-open http://localhost:6060; go tool godoc -http localhost:6060",
       "dev": "./tmux.sh",
       "open": "openscad ./output/output.scad",
       "render": "mkdir -p output && go run ./bin/main.go render output/output.scad",
