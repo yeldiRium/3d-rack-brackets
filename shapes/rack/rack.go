@@ -7,25 +7,45 @@ import (
 
 const (
 	SCREW_RADIUS_M6 = 3.0
+
+	RACK_SPINE_WIDTH          = 15.875
+	RACK_SPINE_THICKNESS      = 10.0
+	RACK_SEGMENT_HEIGHT       = 44.45
+	RACK_SEGMENT_HOLE_SPACING = 6.35
 )
 
 func MakeRackSegment() primitive.Primitive {
-	thickness := 10.0
-	rackSegmentWidth := 15.875
-	rackSegmentHeight := 44.45
-	distanceEdgeToHole := 6.35
-
-	spine := primitive.NewCube(mgl64.Vec3{rackSegmentWidth, thickness, rackSegmentHeight})
-	cutout := primitive.NewCylinder(thickness + 1, SCREW_RADIUS_M6)
+	spine := primitive.NewCube(mgl64.Vec3{RACK_SPINE_WIDTH, RACK_SPINE_THICKNESS, RACK_SEGMENT_HEIGHT})
+	cutout := primitive.NewCylinder(RACK_SPINE_THICKNESS+1, SCREW_RADIUS_M6)
 	orientedCutout := primitive.NewRotation(mgl64.Vec3{90, 0, 0}, cutout)
 
-	firstCutout := primitive.NewTranslation(mgl64.Vec3{0, 0, (rackSegmentHeight / 2) - distanceEdgeToHole}, orientedCutout)
+	firstCutout := primitive.NewTranslation(mgl64.Vec3{0, 0, (RACK_SEGMENT_HEIGHT / 2) - RACK_SEGMENT_HOLE_SPACING}, orientedCutout)
 	secondCutout := orientedCutout
-	thirdCutout := primitive.NewTranslation(mgl64.Vec3{0, 0, - (rackSegmentHeight / 2) + distanceEdgeToHole}, orientedCutout)
+	thirdCutout := primitive.NewTranslation(mgl64.Vec3{0, 0, -(RACK_SEGMENT_HEIGHT / 2) + RACK_SEGMENT_HOLE_SPACING}, orientedCutout)
 
 	rackSegment := primitive.NewDifference(spine, firstCutout, secondCutout, thirdCutout)
 
-	orientedRackSegment := primitive.NewRotation(mgl64.Vec3{-90, 0, 0}, rackSegment)
+	return rackSegment
+}
 
-	return orientedRackSegment
+func MakeRack(heightUnits uint8) primitive.Primitive {
+	segments := primitive.NewList()
+
+	// Since the origin point of each segment is it's center, we need to calculate
+	// height as the distance between the top and the bottom center. Otherwise
+	// the translations don't fit or the calculation below has to be more complic-
+	// ated.
+	finalHeight := RACK_SEGMENT_HEIGHT * float64(heightUnits - 1)
+	zStart := -finalHeight / 2
+
+	for i := uint8(0); i < heightUnits; i++ {
+		segments.Add(primitive.NewTranslation(
+			mgl64.Vec3{0, 0, zStart + float64(i) * RACK_SEGMENT_HEIGHT},
+			MakeRackSegment(),
+		))
+	}
+
+	//orientedRackSegments := primitive.NewRotation(mgl64.Vec3{-90, 0, 0}, segments)
+
+	return segments
 }
