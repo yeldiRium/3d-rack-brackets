@@ -14,7 +14,7 @@ var (
 
 type Anchor interface {
 	Parent() Anchored
-	Connect(target Anchor, rotation float64) error
+	Connect(target Anchor, angle float64) error
 	Connection() *anchorConnection
 	Translation() primitive.Transform
 	Normal() mgl64.Vec3
@@ -44,36 +44,36 @@ func (anchor *anchor) Parent() Anchored {
 	return anchor.parent
 }
 
-func (anchor *anchor) Connect(target Anchor, rotation float64) error {
+func (anchor *anchor) Connect(target Anchor, angle float64) error {
 	if target == nil {
 		panic("target must not be nil")
 	}
 
-	inverseRotation := math.Mod(360-rotation, 360)
+	inverseAngle := math.Mod(360-angle, 360)
 	if anchor.connection != nil &&
 		anchor.connection.target == target &&
-		anchor.connection.rotation == rotation &&
+		anchor.connection.angle == angle &&
 		target.Connection() != nil &&
 		target.Connection().Target() == anchor &&
-		target.Connection().Rotation() == inverseRotation {
+		target.Connection().Angle() == inverseAngle {
 		return nil
 	}
 
-	if anchor.connection != nil && (anchor.connection.target != target || anchor.connection.rotation != rotation) {
+	if anchor.connection != nil && (anchor.connection.target != target || anchor.connection.angle != angle) {
 		return ErrAnchorAlreadyConnected
 	}
 	targetConnection := target.Connection()
 	if targetConnection != nil {
-		if targetConnection.Target() != anchor || targetConnection.Rotation() != inverseRotation {
+		if targetConnection.Target() != anchor || targetConnection.Angle() != inverseAngle {
 			return ErrAnchorAlreadyConnected
 		}
 	}
 
 	anchor.connection = &anchorConnection{
-		target:   target,
-		rotation: rotation,
+		target: target,
+		angle:  angle,
 	}
-	target.Connect(anchor, inverseRotation)
+	target.Connect(anchor, inverseAngle)
 
 	return nil
 }
@@ -92,20 +92,20 @@ func (anchor *anchor) Normal() mgl64.Vec3 {
 
 type AnchorConnection interface {
 	Target() Anchor
-	Rotation() float64
+	Angle() float64
 }
 
 type anchorConnection struct {
-	target   Anchor
-	rotation float64
+	target Anchor
+	angle  float64
 }
 
 func (c *anchorConnection) Target() Anchor {
 	return c.target
 }
 
-func (c *anchorConnection) Rotation() float64 {
-	return c.rotation
+func (c *anchorConnection) Angle() float64 {
+	return c.angle
 }
 
 func NewAnchor(parent Anchored, translation primitive.Transform, normal mgl64.Vec3) *anchor {
@@ -120,11 +120,63 @@ func NewAnchor(parent Anchored, translation primitive.Transform, normal mgl64.Ve
 type Anchored interface {
 	Anchors() map[string]Anchor
 	SetAnchorTransform(t primitive.Transform) error
+	GetAnchorTransform() *primitive.Transform
 }
 
 func ResolveAnchors(start Anchored) error {
-	// TODO: implement graph algo that traverses anchors, resolves tranforms, de-
-	// tects obvious collections and writes the resolved transforms into the an-
-	// choreds.
+	start.SetAnchorTransform(*primitive.NewTranslation(mgl64.Vec3{}))
+	anchoredQueue := []Anchored{start}
+
+	processedAnchoreds := map[Anchored]bool{}
+
+	for len(anchoredQueue) > 0 {
+		currentAnchored := anchoredQueue[0]
+		anchoredQueue = anchoredQueue[1:]
+
+		if processedAnchoreds[currentAnchored] {
+			continue
+		}
+
+		processedAnchoreds[currentAnchored] = true
+
+		currentTransform := currentAnchored.GetAnchorTransform()
+		if currentTransform == nil {
+			panic("an already processed anchored unexpectedly has no transform. this should never happen")
+		}
+
+		for _, anchor := range currentAnchored.Anchors() {
+			connection := anchor.Connection()
+			if connection == nil {
+				continue
+			}
+			targetAnchor := connection.Target()
+			angle := connection.Angle()
+			targetAnchored := targetAnchor.Parent()
+
+			matchAnchorOrientationRotation := calculateRotationFromVec3ToVec3(anchor.Normal(), targetAnchor.Normal())
+
+			matchAnchorOrientation := primitive.NewRotation(matchAnchorOrientationRotation)
+			rotateAroundConnection := primitive.NewRotationByAxis(angle, anchor.Normal())
+			moveByStartAnchor := anchor.Translation()
+			moveByTargetAnchor := targetAnchor.Translation()
+
+			targetTransformation := matchAnchorOrientation
+			targetTransformation.Append(rotateAroundConnection)
+			targetTransformation.Append(&moveByStartAnchor)
+			targetTransformation.Append(&moveByTargetAnchor)
+
+			err := targetAnchored.SetAnchorTransform(*targetTransformation)
+			if err != nil {
+				return err
+			}
+
+			anchoredQueue = append(anchoredQueue, targetAnchored)
+		}
+	}
+
 	return nil
+}
+
+func calculateRotationFromVec3ToVec3(from, to mgl64.Vec3) mgl64.Vec3 {
+	// TODO implement this. maybe using mat3s is better than vec3s? hm.
 }

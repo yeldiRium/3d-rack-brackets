@@ -1,6 +1,7 @@
 package shapes
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/go-gl/mathgl/mgl64"
@@ -11,7 +12,7 @@ import (
 type FooAnchored struct {
 	primitive.ParentImpl
 	primitive.Cube
-	anchors map[string]Anchor
+	anchors         map[string]Anchor
 	anchorTransform *primitive.Transform
 }
 
@@ -20,7 +21,7 @@ func NewFoo(edge float64) *FooAnchored {
 	foo.Cube = *primitive.NewCube(mgl64.Vec3{edge, edge, edge})
 	foo.anchors = map[string]Anchor{
 		"bottom": NewAnchor(foo, *primitive.NewTranslation(mgl64.Vec3{0, 0, -edge / 2}), mgl64.Vec3{0, 0, -1}),
-		"right": NewAnchor(foo, *primitive.NewTranslation(mgl64.Vec3{edge / 2, 0, 0}), mgl64.Vec3{1, 0, 0}),
+		"right":  NewAnchor(foo, *primitive.NewTranslation(mgl64.Vec3{edge / 2, 0, 0}), mgl64.Vec3{1, 0, 0}),
 	}
 	return foo
 }
@@ -29,8 +30,19 @@ func (foo *FooAnchored) Anchors() map[string]Anchor {
 	return foo.anchors
 }
 
-func (foo *FooAnchored) SetAnchorTransform(t primitive.Transform) error {
-	panic("unimplemented")
+func (foo *FooAnchored) SetAnchorTransform(transform primitive.Transform) error {
+	if foo.anchorTransform != nil {
+		// TODO check if the preexisting anchorTransform might be identical to
+		// transform. If so, don't return an error.
+		return fmt.Errorf("trying to set conflicting anchor transforms")
+	}
+
+	foo.anchorTransform = &transform
+	return nil
+}
+
+func (foo *FooAnchored) GetAnchorTransform() *primitive.Transform {
+	return foo.anchorTransform
 }
 
 func TestResolveAnchors(t *testing.T) {
