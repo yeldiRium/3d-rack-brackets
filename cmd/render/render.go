@@ -8,6 +8,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-gl/mathgl/mgl64"
+	"github.com/ljanyst/ghostscad/primitive"
 	"github.com/yeldiRium/3d-rack-brackets/bin/globals"
 	"github.com/yeldiRium/3d-rack-brackets/ghostscad"
 	"github.com/yeldiRium/3d-rack-brackets/shapes/rack"
@@ -37,9 +39,10 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 	bufferedOutput := bufio.NewWriter(output)
 
 	shape := rack.MakeRack(3)
+	orientedShape := primitive.NewRotation(mgl64.Vec3{90, 0, 0}, shape)
 
 	ghostscad.RenderGlobals(bufferedOutput)
-	shape.Render(bufferedOutput)
+	orientedShape.Render(bufferedOutput)
 
 	bufferedOutput.Flush()
 

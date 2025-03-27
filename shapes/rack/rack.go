@@ -14,7 +14,12 @@ const (
 	RACK_SEGMENT_HOLE_SPACING = 6.35
 )
 
-func MakeRackSegment() primitive.Primitive {
+type RackSegment struct {
+	primitive.ParentImpl
+	primitive.List
+}
+
+func NewRackSegment() *RackSegment {
 	spine := primitive.NewCube(mgl64.Vec3{RACK_SPINE_WIDTH, RACK_SPINE_THICKNESS, RACK_SEGMENT_HEIGHT})
 	cutout := primitive.NewCylinder(RACK_SPINE_THICKNESS+1, SCREW_RADIUS_M6)
 	orientedCutout := primitive.NewRotation(mgl64.Vec3{90, 0, 0}, cutout)
@@ -23,13 +28,21 @@ func MakeRackSegment() primitive.Primitive {
 	secondCutout := orientedCutout
 	thirdCutout := primitive.NewTranslation(mgl64.Vec3{0, 0, -(RACK_SEGMENT_HEIGHT / 2) + RACK_SEGMENT_HOLE_SPACING}, orientedCutout)
 
-	rackSegment := primitive.NewDifference(spine, firstCutout, secondCutout, thirdCutout)
+	spineWithCutouts := primitive.NewDifference(spine, firstCutout, secondCutout, thirdCutout)
+
+	rackSegment := &RackSegment{}
+	rackSegment.Add(spineWithCutouts)
 
 	return rackSegment
 }
 
-func MakeRack(heightUnits uint8) primitive.Primitive {
-	segments := primitive.NewList()
+type Rack struct {
+	primitive.ParentImpl
+	primitive.List
+}
+
+func MakeRack(heightUnits uint8) *Rack {
+	rack := &Rack{}
 
 	// Since the origin point of each segment is it's center, we need to calculate
 	// height as the distance between the top and the bottom center. Otherwise
@@ -39,13 +52,11 @@ func MakeRack(heightUnits uint8) primitive.Primitive {
 	zStart := -finalHeight / 2
 
 	for i := uint8(0); i < heightUnits; i++ {
-		segments.Add(primitive.NewTranslation(
+		rack.Add(primitive.NewTranslation(
 			mgl64.Vec3{0, 0, zStart + float64(i) * RACK_SEGMENT_HEIGHT},
-			MakeRackSegment(),
+			NewRackSegment(),
 		))
 	}
 
-	//orientedRackSegments := primitive.NewRotation(mgl64.Vec3{-90, 0, 0}, segments)
-
-	return segments
+	return rack
 }
