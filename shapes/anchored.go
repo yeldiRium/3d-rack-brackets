@@ -177,6 +177,34 @@ func ResolveAnchors(start Anchored) error {
 	return nil
 }
 
+// the following two functions were written by chatgpt and are not tested yet.
+// TODO: test them manually by implementing `anchored` on `rack`.
+// TODO: test them automatically by improving the unit test and thinking it through
 func calculateRotationFromVec3ToVec3(from, to mgl64.Vec3) mgl64.Vec3 {
-	// TODO implement this. maybe using mat3s is better than vec3s? hm.
+	axis := from.Cross(to).Normalize()
+	angle := math.Acos(from.Normalize().Dot(to.Normalize()))
+
+	rotationMatrix := mgl64.HomogRotate3D(angle, axis)
+	eulerAngles := eulerAngles(rotationMatrix)
+
+	return eulerAngles
+}
+
+func eulerAngles(rotationMatrix mgl64.Mat4) mgl64.Vec3 {
+	sy := math.Sqrt(rotationMatrix[0]*rotationMatrix[0] + rotationMatrix[1]*rotationMatrix[1])
+
+	singular := sy < 1e-6
+
+	var x, y, z float64
+	if !singular {
+		x = math.Atan2(rotationMatrix[6], rotationMatrix[10])
+		y = math.Atan2(-rotationMatrix[2], sy)
+		z = math.Atan2(rotationMatrix[1], rotationMatrix[0])
+	} else {
+		x = math.Atan2(-rotationMatrix[9], rotationMatrix[5])
+		y = math.Atan2(-rotationMatrix[2], sy)
+		z = 0
+	}
+
+	return mgl64.Vec3{x, y, z}
 }

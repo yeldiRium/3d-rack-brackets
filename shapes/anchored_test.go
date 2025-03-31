@@ -58,7 +58,7 @@ func TestResolveAnchors(t *testing.T) {
 		expectedTransformFooOne := primitive.NewTranslation(mgl64.Vec3{0, 0, 0})
 		expectedTransformFooOne.Append(primitive.NewRotation(mgl64.Vec3{0, 0, 0}))
 		expectedTransformFooTwo := primitive.NewTranslation(mgl64.Vec3{4.5, 0, 0})
-		expectedTransformFooTwo.Append(primitive.NewRotation(mgl64.Vec3{0, 0, 0})) // TODO: fix rotation
+		expectedTransformFooTwo.Append(primitive.NewRotation(mgl64.Vec3{0, 90, 0})) // TODO: fix rotation
 
 		assert.Equal(t, expectedTransformFooOne, fooOne.anchorTransform)
 		assert.Equal(t, expectedTransformFooTwo, fooTwo.anchorTransform)
