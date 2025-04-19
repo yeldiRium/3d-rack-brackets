@@ -44,6 +44,15 @@ type anchor struct {
 	connection *anchorConnection
 }
 
+func NewAnchor(name string, parent Anchored, translation primitive.Transform, normal mgl64.Vec3) *anchor {
+	return &anchor{
+		name:        name,
+		parent:      parent,
+		translation: translation,
+		normal:      normal,
+	}
+}
+
 func (anchor *anchor) Name() string {
 	return anchor.name
 }
@@ -122,15 +131,6 @@ func (c *anchorConnection) WasResolved() bool {
 	return c.wasResolved
 }
 
-func NewAnchor(name string, parent Anchored, translation primitive.Transform, normal mgl64.Vec3) *anchor {
-	return &anchor{
-		name:        name,
-		parent:      parent,
-		translation: translation,
-		normal:      normal,
-	}
-}
-
 type Anchored interface {
 	Anchors() map[string]Anchor
 	SetAnchorTransform(t primitive.Transform) error
@@ -175,9 +175,10 @@ func ResolveAnchors(start Anchored) error {
 			moveByStartAnchor := anchor.Translation()
 			moveByTargetAnchor := targetAnchor.Translation()
 
-			targetTransformation := matchAnchorOrientation
-			targetTransformation.Append(rotateAroundConnection)
+			targetTransformation := primitive.NewTranslation(mgl64.Vec3{})
 			targetTransformation.Append(&moveByStartAnchor)
+			targetTransformation.Append(rotateAroundConnection)
+			targetTransformation.Append(matchAnchorOrientation)
 			targetTransformation.Append(&moveByTargetAnchor)
 
 			err := targetAnchored.SetAnchorTransform(*targetTransformation)
@@ -194,19 +195,39 @@ func ResolveAnchors(start Anchored) error {
 	return nil
 }
 
-// the following two functions were written by chatgpt and are not tested yet.
-// TODO: test them manually by implementing `anchored` on `rack`.
-// TODO: test them automatically by improving the unit test and thinking it through
+// TODO: fix rotation for parallel vectors
 func calculateRotationFromVec3ToVec3(from, to mgl64.Vec3) mgl64.Vec3 {
 	axis := from.Cross(to).Normalize()
+	if math.IsNaN(axis[0]) {
+		// If any of the axis' values are NaN, from and to are parallel and we can
+		// choose any orthogonal
+		axis = findOrthogonal(from)
+
+		// TODO: rotate by 180deg or 0deg, dependening on orientation of from and to
+	}
 	angle := math.Acos(from.Normalize().Dot(to.Normalize()))
 
 	rotationMatrix := mgl64.HomogRotate3D(angle, axis)
 	eulerAngles := eulerAngles(rotationMatrix)
 
-	return eulerAngles
+	return mgl64.Vec3{
+		mgl64.RadToDeg(eulerAngles[0]),
+		mgl64.RadToDeg(eulerAngles[1]),
+		mgl64.RadToDeg(eulerAngles[2]),
+	}
 }
 
+// to find an orthogonal u for v, we need to set u dot v = 0
+// u1 * v1 + u2 * v2 + u3 * v3 = 0
+// setting u1 = 1 and u2 = 1 we get
+// v1 + v2 + u3 * v3 = 0
+// u3 = (-v1 - v2) / v3
+func findOrthogonal(v mgl64.Vec3) mgl64.Vec3 {
+	z := (-v[0] - v[1]) / v[2]
+	return mgl64.Vec3{1, 1, z}
+}
+
+// eulerAngles takes a radians rotation matrix and calculates its radians euler angles
 func eulerAngles(rotationMatrix mgl64.Mat4) mgl64.Vec3 {
 	sy := math.Sqrt(rotationMatrix[0]*rotationMatrix[0] + rotationMatrix[1]*rotationMatrix[1])
 
