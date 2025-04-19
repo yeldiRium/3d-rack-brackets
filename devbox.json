@@ -10,9 +10,13 @@
   },
   "shell": {
     "scripts": {
-      "build":  "go build ./bin/main.go",
-      "doc": "xdg-open http://localhost:6060; go tool godoc -http localhost:6060",
       "dev": "./tmux.sh",
+      "build": "go build .",
+      "doc":  "xdg-open http://localhost:6060; go tool godoc -http localhost:6060",
+      "lint": "golangci-lint run ./...",
+      "lint:fix": "golangci-lint run --fix ./...",
+      "test": "go test ./...",
+
       "open": "openscad ./output/output.scad",
       "render": "mkdir -p output && go run ./bin/main.go render output/output.scad",
       "render:preview": "devbox run render:prod && openscad -o output.png ./output/output.scad",
