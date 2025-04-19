@@ -39,7 +39,7 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 	}
 	bufferedOutput := bufio.NewWriter(output)
 
-	shape := rack.MakeRack(4)
+	shape := rack.MakeRack(2)
 	err = shapes.ResolveAnchors(shape.Segments[0])
 	if err != nil {
 		return fmt.Errorf("failed to resolve anchors: %w", err)
