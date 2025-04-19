@@ -45,7 +45,7 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 		return fmt.Errorf("failed to resolve anchors: %w", err)
 	}
 
-	orientedShape := primitive.NewRotation(mgl64.Vec3{90, 0, 0}, shape)
+	orientedShape := primitive.NewRotation(mgl64.Vec3{-90, 0, 0}, shape)
 
 	ghostscad.RenderGlobals(bufferedOutput)
 	orientedShape.Render(bufferedOutput)

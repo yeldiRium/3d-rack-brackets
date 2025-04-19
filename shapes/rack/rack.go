@@ -48,7 +48,7 @@ func NewRackSegment(name string) *RackSegment {
 	rackSegment.contents.Add(spineWithCutouts)
 	rackSegment.anchors = map[string]shapes.Anchor{
 		"top": shapes.NewAnchor("top", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, RACK_SEGMENT_HEIGHT / 2}), mgl64.Vec3{0, 0, 1}),
-		"bottom":  shapes.NewAnchor("bottom", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, -RACK_SEGMENT_HEIGHT / 2}), mgl64.Vec3{0, 0, 1}),
+		"bottom":  shapes.NewAnchor("bottom", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, -RACK_SEGMENT_HEIGHT / 2}), mgl64.Vec3{0, 0, -1}),
 	}
 
 	return rackSegment

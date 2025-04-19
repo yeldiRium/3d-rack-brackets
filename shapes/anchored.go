@@ -169,7 +169,7 @@ func ResolveAnchors(start Anchored) error {
 			angle := connection.Angle()
 			targetAnchored := targetAnchor.Parent()
 
-			matchAnchorOrientationRotation := calculateRotationFromVec3ToVec3(anchor.Normal(), targetAnchor.Normal())
+			matchAnchorOrientationRotation := calculateRotationFromVec3ToVec3(anchor.Normal(), targetAnchor.Normal().Mul(-1))
 
 			matchAnchorOrientation := primitive.NewRotation(matchAnchorOrientationRotation)
 			rotateAroundConnection := primitive.NewRotationByAxis(angle, anchor.Normal())
