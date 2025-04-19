@@ -13,6 +13,7 @@ var (
 )
 
 type Anchor interface {
+	Name() string
 	Parent() Anchored
 	Connect(target Anchor, angle float64) error
 	Connection() *anchorConnection
@@ -21,6 +22,9 @@ type Anchor interface {
 }
 
 type anchor struct {
+	// name identifies the anchor and is mainly used for debugging
+	name string
+
 	// parent is the shape that the anchor is a part of. The anchor is used to
 	// connect the parent to another primitive.
 	parent Anchored
@@ -38,6 +42,10 @@ type anchor struct {
 	// connectedAnchor is a second anchor that is connected to this one. Each an-
 	// chor can always be tied to at most one other anchor.
 	connection *anchorConnection
+}
+
+func (anchor *anchor) Name() string {
+	return anchor.name
 }
 
 func (anchor *anchor) Parent() Anchored {
@@ -93,11 +101,13 @@ func (anchor *anchor) Normal() mgl64.Vec3 {
 type AnchorConnection interface {
 	Target() Anchor
 	Angle() float64
+	WasResolved() bool
 }
 
 type anchorConnection struct {
-	target Anchor
-	angle  float64
+	target      Anchor
+	angle       float64
+	wasResolved bool
 }
 
 func (c *anchorConnection) Target() Anchor {
@@ -108,13 +118,17 @@ func (c *anchorConnection) Angle() float64 {
 	return c.angle
 }
 
-func NewAnchor(parent Anchored, translation primitive.Transform, normal mgl64.Vec3) *anchor {
-	anchor := &anchor{}
-	anchor.parent = parent
-	anchor.translation = translation
-	anchor.normal = normal
+func (c *anchorConnection) WasResolved() bool {
+	return c.wasResolved
+}
 
-	return anchor
+func NewAnchor(name string, parent Anchored, translation primitive.Transform, normal mgl64.Vec3) *anchor {
+	return &anchor{
+		name:        name,
+		parent:      parent,
+		translation: translation,
+		normal:      normal,
+	}
 }
 
 type Anchored interface {
@@ -146,9 +160,10 @@ func ResolveAnchors(start Anchored) error {
 
 		for _, anchor := range currentAnchored.Anchors() {
 			connection := anchor.Connection()
-			if connection == nil {
+			if connection == nil || connection.wasResolved {
 				continue
 			}
+
 			targetAnchor := connection.Target()
 			angle := connection.Angle()
 			targetAnchored := targetAnchor.Parent()
@@ -169,6 +184,8 @@ func ResolveAnchors(start Anchored) error {
 			if err != nil {
 				return err
 			}
+			connection.wasResolved = true
+			targetAnchor.Connection().wasResolved = true
 
 			anchoredQueue = append(anchoredQueue, targetAnchored)
 		}
