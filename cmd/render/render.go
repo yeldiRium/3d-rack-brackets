@@ -39,16 +39,13 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 	}
 	bufferedOutput := bufio.NewWriter(output)
 
-	shape := rack.NewRackSegment("segment-1")
-	shape2 := rack.NewRackSegment("segment-2")
-	shape.Anchors()["bottom"].Connect(shape2.Anchors()["top"], 0)
-	err = shapes.ResolveAnchors(shape)
+	shape := rack.MakeRack(4)
+	err = shapes.ResolveAnchors(shape.Segments[0])
 	if err != nil {
 		return fmt.Errorf("failed to resolve anchors: %w", err)
 	}
 
-	list := primitive.NewList(shape, shape2)
-	orientedShape := primitive.NewRotation(mgl64.Vec3{90, 0, 0}, list)
+	orientedShape := primitive.NewRotation(mgl64.Vec3{90, 0, 0}, shape)
 
 	ghostscad.RenderGlobals(bufferedOutput)
 	orientedShape.Render(bufferedOutput)

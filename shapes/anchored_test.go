@@ -24,9 +24,9 @@ func NewFoo(name string, edge float64) *FooAnchored {
 		Cube: *primitive.NewCube(mgl64.Vec3{edge, edge, edge}),
 	}
 	foo.anchors = map[string]Anchor{
-		"top": NewAnchor("top", foo, *primitive.NewTranslation(mgl64.Vec3{0, 0, edge / 2}), mgl64.Vec3{0, 0, 1}),
-		"bottom": NewAnchor("bottom", foo, *primitive.NewTranslation(mgl64.Vec3{0, 0, -edge / 2}), mgl64.Vec3{0, 0, -1}),
-		"right":  NewAnchor("right", foo, *primitive.NewTranslation(mgl64.Vec3{edge / 2, 0, 0}), mgl64.Vec3{1, 0, 0}),
+		"top": NewAnchor("top", foo, primitive.NewTranslation(mgl64.Vec3{0, 0, edge / 2}), mgl64.Vec3{0, 0, 1}),
+		"bottom": NewAnchor("bottom", foo, primitive.NewTranslation(mgl64.Vec3{0, 0, -edge / 2}), mgl64.Vec3{0, 0, -1}),
+		"right":  NewAnchor("right", foo, primitive.NewTranslation(mgl64.Vec3{edge / 2, 0, 0}), mgl64.Vec3{1, 0, 0}),
 	}
 	return foo
 }

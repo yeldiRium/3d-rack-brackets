@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-gl/mathgl/mgl64"
 	"github.com/ljanyst/ghostscad/primitive"
+	"github.com/yeldiRium/3d-rack-brackets/ghostscad"
 )
 
 var (
@@ -17,7 +18,7 @@ type Anchor interface {
 	Parent() Anchored
 	Connect(target Anchor, angle float64) error
 	Connection() *anchorConnection
-	Translation() primitive.Transform
+	Translation() *primitive.Transform
 	Normal() mgl64.Vec3
 }
 
@@ -32,7 +33,7 @@ type anchor struct {
 	// translation is a translation from the anchored parent's origin to the an-
 	// chor. Thus applying the inverse transform to the anchor results in the an-
 	// chored parent's origin.
-	translation primitive.Transform
+	translation *primitive.Transform
 
 	// normal is the direction in which the anchor connects. When connecting to
 	// another anchor, they will be rotated so that their normals are opposite
@@ -44,7 +45,7 @@ type anchor struct {
 	connection *anchorConnection
 }
 
-func NewAnchor(name string, parent Anchored, translation primitive.Transform, normal mgl64.Vec3) *anchor {
+func NewAnchor(name string, parent Anchored, translation *primitive.Transform, normal mgl64.Vec3) *anchor {
 	return &anchor{
 		name:        name,
 		parent:      parent,
@@ -99,7 +100,7 @@ func (anchor *anchor) Connection() *anchorConnection {
 	return anchor.connection
 }
 
-func (anchor *anchor) Translation() primitive.Transform {
+func (anchor *anchor) Translation() *primitive.Transform {
 	return anchor.translation
 }
 
@@ -173,13 +174,13 @@ func ResolveAnchors(start Anchored) error {
 			matchAnchorOrientation := primitive.NewRotation(matchAnchorOrientationRotation)
 			rotateAroundConnection := primitive.NewRotationByAxis(angle, anchor.Normal())
 			moveByStartAnchor := anchor.Translation()
-			moveByTargetAnchor := targetAnchor.Translation()
+			moveByTargetAnchor := targetAnchor.Translation().Inverse()
 
-			targetTransformation := primitive.NewTranslation(mgl64.Vec3{})
-			targetTransformation.Append(&moveByStartAnchor)
-			targetTransformation.Append(rotateAroundConnection)
+			targetTransformation := ghostscad.CloneTransform(currentTransform)
+			targetTransformation.Append(moveByStartAnchor)
+			targetTransformation.Append(rotateAroundConnection) 
 			targetTransformation.Append(matchAnchorOrientation)
-			targetTransformation.Append(&moveByTargetAnchor)
+			targetTransformation.Append(moveByTargetAnchor)
 
 			err := targetAnchored.SetAnchorTransform(*targetTransformation)
 			if err != nil {

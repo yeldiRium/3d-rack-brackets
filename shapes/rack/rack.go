@@ -47,8 +47,8 @@ func NewRackSegment(name string) *RackSegment {
 	}
 	rackSegment.contents.Add(spineWithCutouts)
 	rackSegment.anchors = map[string]shapes.Anchor{
-		"top": shapes.NewAnchor("top", rackSegment, *primitive.NewTranslation(mgl64.Vec3{0, 0, RACK_SEGMENT_HEIGHT / 2}), mgl64.Vec3{0, 0, 1}),
-		"bottom":  shapes.NewAnchor("bottom", rackSegment, *primitive.NewTranslation(mgl64.Vec3{0, 0, -RACK_SEGMENT_HEIGHT / 2}), mgl64.Vec3{0, 0, -1}),
+		"top": shapes.NewAnchor("top", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, RACK_SEGMENT_HEIGHT / 2}), mgl64.Vec3{0, 0, 1}),
+		"bottom":  shapes.NewAnchor("bottom", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, -RACK_SEGMENT_HEIGHT / 2}), mgl64.Vec3{0, 0, 1}),
 	}
 
 	return rackSegment
@@ -108,23 +108,30 @@ func (rackSegment *RackSegment) Render(w *bufio.Writer) {
 type Rack struct {
 	primitive.ParentImpl
 	primitive.List
+	Segments []*RackSegment
 }
 
 func MakeRack(heightUnits uint8) *Rack {
-	rack := &Rack{}
+	rack := &Rack{
+		Segments: make([]*RackSegment, 0, heightUnits),
+	}
 
-	// Since the origin point of each segment is it's center, we need to calculate
-	// height as the distance between the top and the bottom center. Otherwise
-	// the translations don't fit or the calculation below has to be more complic-
-	// ated.
-	finalHeight := RACK_SEGMENT_HEIGHT * float64(heightUnits-1)
-	zStart := -finalHeight / 2
+	if heightUnits == 0 {
+		return rack
+	}
+
+	var previousSegment *RackSegment
 
 	for i := uint8(0); i < heightUnits; i++ {
-		rack.Add(primitive.NewTranslation(
-			mgl64.Vec3{0, 0, zStart + float64(i)*RACK_SEGMENT_HEIGHT},
-			NewRackSegment(fmt.Sprintf("segment-%d", i)),
-		))
+		nextSegment := NewRackSegment(fmt.Sprintf("segment-%d", i))
+
+		if previousSegment != nil {
+			previousSegment.Anchors()["bottom"].Connect(nextSegment.Anchors()["top"], 0)
+		}
+
+		previousSegment = nextSegment
+		rack.Add(nextSegment)
+		rack.Segments = append(rack.Segments, nextSegment)
 	}
 
 	return rack
