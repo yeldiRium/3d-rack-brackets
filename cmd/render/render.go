@@ -12,6 +12,7 @@ import (
 	"github.com/ljanyst/ghostscad/primitive"
 	"github.com/yeldiRium/3d-rack-brackets/bin/globals"
 	"github.com/yeldiRium/3d-rack-brackets/ghostscad"
+	"github.com/yeldiRium/3d-rack-brackets/shapes"
 	"github.com/yeldiRium/3d-rack-brackets/shapes/rack"
 )
 
@@ -38,8 +39,16 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 	}
 	bufferedOutput := bufio.NewWriter(output)
 
-	shape := rack.MakeRack(3)
-	orientedShape := primitive.NewRotation(mgl64.Vec3{90, 0, 0}, shape)
+	shape := rack.NewRackSegment("segment-1")
+	shape2 := rack.NewRackSegment("segment-2")
+	shape.Anchors()["bottom"].Connect(shape2.Anchors()["top"], 0)
+	err = shapes.ResolveAnchors(shape)
+	if err != nil {
+		return fmt.Errorf("failed to resolve anchors: %w", err)
+	}
+
+	list := primitive.NewList(shape, shape2)
+	orientedShape := primitive.NewRotation(mgl64.Vec3{90, 0, 0}, list)
 
 	ghostscad.RenderGlobals(bufferedOutput)
 	orientedShape.Render(bufferedOutput)
