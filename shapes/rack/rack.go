@@ -126,7 +126,10 @@ func MakeRack(heightUnits uint8) *Rack {
 		nextSegment := NewRackSegment(fmt.Sprintf("segment-%d", i))
 
 		if previousSegment != nil {
-			previousSegment.Anchors()["bottom"].Connect(nextSegment.Anchors()["top"], 0)
+			err := previousSegment.Anchors()["bottom"].Connect(nextSegment.Anchors()["top"], 0)
+			if err != nil {
+				panic("failed to connect rack segments. this should not happen")
+			}
 		}
 
 		previousSegment = nextSegment
