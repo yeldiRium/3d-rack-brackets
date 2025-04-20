@@ -46,10 +46,10 @@ func Use(file string) {
 }
 
 func RenderGlobals(w *bufio.Writer) {
-	w.WriteString(fmt.Sprintf("$fa=%f;\n", fa))
-	w.WriteString(fmt.Sprintf("$fs=%f;\n", fs))
-	w.WriteString(fmt.Sprintf("$fn=%d;\n", fn))
+	_, _ = fmt.Fprintf(w, "$fa=%f;\n", fa)
+	_, _ = fmt.Fprintf(w, "$fs=%f;\n", fs)
+	_, _ = fmt.Fprintf(w, "$fn=%d;\n", fn)
 	for _, use := range uses {
-		w.WriteString(fmt.Sprintf("use <%s>;\n", use))
+		_, _ = fmt.Fprintf(w, "use <%s>;\n", use)
 	}
 }

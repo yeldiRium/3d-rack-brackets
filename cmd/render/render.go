@@ -50,7 +50,10 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 	ghostscad.RenderGlobals(bufferedOutput)
 	orientedShape.Render(bufferedOutput)
 
-	bufferedOutput.Flush()
+	err = bufferedOutput.Flush()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

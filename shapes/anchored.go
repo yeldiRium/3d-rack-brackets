@@ -91,7 +91,10 @@ func (anchor *anchor) Connect(target Anchor, angle float64) error {
 		target: target,
 		angle:  angle,
 	}
-	target.Connect(anchor, inverseAngle)
+	err := target.Connect(anchor, inverseAngle)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -139,7 +142,10 @@ type Anchored interface {
 }
 
 func ResolveAnchors(start Anchored) error {
-	start.SetAnchorTransform(*primitive.NewTranslation(mgl64.Vec3{}))
+	err := start.SetAnchorTransform(*primitive.NewTranslation(mgl64.Vec3{}))
+	if err != nil {
+		return err
+	}
 	anchoredQueue := []Anchored{start}
 
 	processedAnchoreds := map[Anchored]bool{}
@@ -178,7 +184,7 @@ func ResolveAnchors(start Anchored) error {
 
 			targetTransformation := ghostscad.CloneTransform(currentTransform)
 			targetTransformation.Append(moveByStartAnchor)
-			targetTransformation.Append(rotateAroundConnection) 
+			targetTransformation.Append(rotateAroundConnection)
 			targetTransformation.Append(matchAnchorOrientation)
 			targetTransformation.Append(moveByTargetAnchor)
 
