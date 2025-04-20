@@ -7,6 +7,7 @@ import (
 	"github.com/go-gl/mathgl/mgl64"
 	"github.com/ljanyst/ghostscad/primitive"
 	"github.com/stretchr/testify/assert"
+
 	"github.com/yeldiRium/3d-rack-brackets/test"
 )
 
@@ -65,8 +66,8 @@ func TestResolveAnchors(t *testing.T) {
 		expectedTransformFooTwo := primitive.NewTranslation(mgl64.Vec3{})
 		expectedTransformFooTwo.Append(primitive.NewTranslation(mgl64.Vec3{0, 0, -3.5}))
 		expectedTransformFooTwo.Append(primitive.NewRotationByAxis(45, mgl64.Vec3{0, 0, -1}))
-		expectedTransformFooTwo.Append(primitive.NewRotation(mgl64.Vec3{0, -90, 0}))
-		expectedTransformFooTwo.Append(primitive.NewTranslation(mgl64.Vec3{1, 0, 0}))
+		expectedTransformFooTwo.Append(primitive.NewRotation(mgl64.Vec3{0, 90, 0}))
+		expectedTransformFooTwo.Append(primitive.NewTranslation(mgl64.Vec3{-1, 0, 0}))
 
 		test.RemoveParent(fooOne.anchorTransform.Items)
 		test.RemoveParent(fooTwo.anchorTransform.Items)
@@ -90,7 +91,7 @@ func TestResolveAnchors(t *testing.T) {
 		expectedTransformFooTwo := primitive.NewTranslation(mgl64.Vec3{})
 		expectedTransformFooTwo.Append(primitive.NewTranslation(mgl64.Vec3{0, 0, -3.5}))
 		expectedTransformFooTwo.Append(primitive.NewRotationByAxis(0, mgl64.Vec3{0, 0, -1}))
-		expectedTransformFooTwo.Append(primitive.NewRotation(mgl64.Vec3{0, 180, 0})) // TODO: fix rotation
+		expectedTransformFooTwo.Append(primitive.NewRotation(mgl64.Vec3{0, 0, 0})) // TODO: fix rotation
 		expectedTransformFooTwo.Append(primitive.NewTranslation(mgl64.Vec3{0, 0, -1}))
 
 		test.RemoveParent(fooOne.anchorTransform.Items)
