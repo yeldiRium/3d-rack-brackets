@@ -12,7 +12,7 @@ Learning project for 3d modelling using [OpenSCAD](https://openscad.org/) and [G
 > devbox run render:stl
 ```
 
-No there's [output](./output/output.scad).
+Now there's [output](./output/output.scad).
 
 ## Development setup
 
