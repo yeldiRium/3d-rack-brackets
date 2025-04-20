@@ -4,7 +4,8 @@
     "go@1.24.1",
     "inotify-tools@4.23.9.0",
     "openscad@2021.01",
-    "gopls@0.18.1"
+    "gopls@0.18.1",
+    "golangci-lint@2.0.2"
   ],
   "env": {
     "NIX_HARDENING_ENABLE": ""
