@@ -2,10 +2,10 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.10.7/.schema/devbox.schema.json",
   "packages": [
     "go@1.24.1",
-    "inotify-tools@4.23.9.0",
-    "openscad@2021.01",
+    "golangci-lint@2.0.2",
     "gopls@0.18.1",
-    "golangci-lint@2.0.2"
+    "inotify-tools@4.23.9.0",
+    "openscad@2021.01"
   ],
   "env": {
     "NIX_HARDENING_ENABLE": ""
