@@ -22,13 +22,13 @@ type RackSegment struct {
 }
 
 func NewRackSegment(name string) *RackSegment {
-	spine := primitive.NewCube(mgl64.Vec3{RACK_SPINE_WIDTH, RACK_SPINE_THICKNESS, RACK_SEGMENT_HEIGHT})
-	cutout := primitive.NewCylinder(RACK_SPINE_THICKNESS+1, SCREW_RADIUS_M6)
+	spine := primitive.NewCube(mgl64.Vec3{rackSpineWidth, rackSpineThickness, rackSegmentHeight})
+	cutout := primitive.NewCylinder(rackSpineThickness+1, screwRadiusM6)
 	orientedCutout := primitive.NewRotation(mgl64.Vec3{90, 0, 0}, cutout)
 
-	firstCutout := primitive.NewTranslation(mgl64.Vec3{0, 0, (RACK_SEGMENT_HEIGHT / 2) - RACK_SEGMENT_HOLE_SPACING}, orientedCutout)
+	firstCutout := primitive.NewTranslation(mgl64.Vec3{0, 0, (rackSegmentHeight / 2) - rackSegmentHoleSpacing}, orientedCutout)
 	secondCutout := orientedCutout
-	thirdCutout := primitive.NewTranslation(mgl64.Vec3{0, 0, -(RACK_SEGMENT_HEIGHT / 2) + RACK_SEGMENT_HOLE_SPACING}, orientedCutout)
+	thirdCutout := primitive.NewTranslation(mgl64.Vec3{0, 0, -(rackSegmentHeight / 2) + rackSegmentHoleSpacing}, orientedCutout)
 
 	spineWithCutouts := primitive.NewDifference(spine, firstCutout, secondCutout, thirdCutout)
 
@@ -38,8 +38,8 @@ func NewRackSegment(name string) *RackSegment {
 	}
 	rackSegment.contents.Add(spineWithCutouts)
 	rackSegment.anchors = map[string]shapes.Anchor{
-		"top": shapes.NewAnchor("top", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, RACK_SEGMENT_HEIGHT / 2}), mgl64.Vec3{0, 0, 1}),
-		"bottom":  shapes.NewAnchor("bottom", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, -RACK_SEGMENT_HEIGHT / 2}), mgl64.Vec3{0, 0, -1}),
+		"top": shapes.NewAnchor("top", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, rackSegmentHeight / 2}), mgl64.Vec3{0, 0, 1}),
+		"bottom":  shapes.NewAnchor("bottom", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, -rackSegmentHeight / 2}), mgl64.Vec3{0, 0, -1}),
 	}
 
 	return rackSegment
