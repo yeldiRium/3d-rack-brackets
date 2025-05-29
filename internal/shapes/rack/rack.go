@@ -11,12 +11,14 @@ const (
 
 	rackSpineWidth         = 15.875
 	rackSpineThickness     = 10.0
+	rackSpineInlayWidth    = 2.0
 )
 
 type Rack struct {
 	primitive.ParentImpl
 	primitive.List
 	Segments []*RackSegment
+	Foot     *RackFoot
 }
 
 func MakeRack(heightUnits uint8) *Rack {
@@ -43,6 +45,13 @@ func MakeRack(heightUnits uint8) *Rack {
 		rack.Add(nextSegment)
 		rack.Segments = append(rack.Segments, nextSegment)
 	}
+
+	foot := NewRackFoot("foot")
+	if err := foot.Anchors()["top"].Connect(previousSegment.Anchors()["bottom"], 0); err != nil {
+		panic("failed to connect rack segments. this should not happen")
+	}
+	rack.Foot = foot
+	rack.Add(foot)
 
 	return rack
 }
