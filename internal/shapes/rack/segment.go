@@ -10,11 +10,16 @@ import (
 	"github.com/yeldiRium/3d-rack-brackets/internal/shapes"
 )
 
+const (
+	rackSegmentHeight      = 44.45
+	rackSegmentHoleSpacing = 6.35
+)
+
 type RackSegment struct {
 	primitive.ParentImpl
 	prefix string
 
-	name string
+	name     string
 	contents *primitive.List
 
 	anchors         map[string]shapes.Anchor
@@ -33,13 +38,13 @@ func NewRackSegment(name string) *RackSegment {
 	spineWithCutouts := primitive.NewDifference(spine, firstCutout, secondCutout, thirdCutout)
 
 	rackSegment := &RackSegment{
-		name: name,
+		name:     name,
 		contents: primitive.NewList(),
 	}
 	rackSegment.contents.Add(spineWithCutouts)
 	rackSegment.anchors = map[string]shapes.Anchor{
-		"top": shapes.NewAnchor("top", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, rackSegmentHeight / 2}), mgl64.Vec3{0, 0, 1}),
-		"bottom":  shapes.NewAnchor("bottom", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, -rackSegmentHeight / 2}), mgl64.Vec3{0, 0, -1}),
+		"top":    shapes.NewAnchor("top", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, rackSegmentHeight / 2}), mgl64.Vec3{0, 0, 1}),
+		"bottom": shapes.NewAnchor("bottom", rackSegment, primitive.NewTranslation(mgl64.Vec3{0, 0, -rackSegmentHeight / 2}), mgl64.Vec3{0, 0, -1}),
 	}
 
 	return rackSegment

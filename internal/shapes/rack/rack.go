@@ -9,10 +9,8 @@ import (
 const (
 	screwRadiusM6 = 3.0
 
-	rackSpineWidth          = 15.875
-	rackSpineThickness      = 10.0
-	rackSegmentHeight       = 44.45
-	rackSegmentHoleSpacing = 6.35
+	rackSpineWidth         = 15.875
+	rackSpineThickness     = 10.0
 )
 
 type Rack struct {
