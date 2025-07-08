@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	rackFootLength         = 200 + rackSpineInlayWidth
+	rackFootLength         = 170 + rackSpineInlayWidth
 	rackFootThicknessFront = 15
 	rackFootThicknessBack  = 10
 	rackFootWidth          = rackSpineWidth
