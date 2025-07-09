@@ -12,7 +12,7 @@ import (
 
 const (
 	rackFootLength         = 170 + rackSpineInlayWidth
-	rackFootThicknessFront = 15
+	RackFootThicknessFront = 15
 	rackFootThicknessBack  = 10
 	rackFootWidth          = rackSpineWidth
 )
@@ -35,7 +35,7 @@ func NewRackFoot(name string) *RackFoot {
 			rackFootWidth,
 			primitive.NewPolygon([]mgl64.Vec2{
 				{0, 0},
-				{rackFootThicknessFront, 0},
+				{RackFootThicknessFront, 0},
 				{rackFootThicknessBack, rackFootLength},
 				{0, rackFootLength},
 			}),

@@ -42,13 +42,13 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 
 	segmentCount := 2
 	shape := rack.MakeRack(uint8(segmentCount))
-	err = shapes.ResolveAnchors(shape.Segments[0])
+	err = shapes.ResolveAnchors(shape.Foot)
 	if err != nil {
 		return fmt.Errorf("failed to resolve anchors: %w", err)
 	}
 
 	orientedShape := primitive.NewRotation(mgl64.Vec3{0, 0, 0}, shape)
-	translatedShape := primitive.NewTranslation(mgl64.Vec3{0, 0, float64(segmentCount * 40)}, orientedShape)
+	translatedShape := primitive.NewTranslation(mgl64.Vec3{0, 0, float64(rack.RackFootThicknessFront)}, orientedShape)
 
 	ghostscad.RenderGlobals(bufferedOutput)
 	translatedShape.Render(bufferedOutput)

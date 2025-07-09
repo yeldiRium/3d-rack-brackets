@@ -17,14 +17,11 @@ const (
 type Rack struct {
 	primitive.ParentImpl
 	primitive.List
-	Segments []*RackSegment
 	Foot     *RackFoot
 }
 
 func MakeRack(heightUnits uint8) *Rack {
-	rack := &Rack{
-		Segments: make([]*RackSegment, 0, heightUnits),
-	}
+	rack := &Rack{}
 
 	if heightUnits == 0 {
 		return rack
@@ -43,7 +40,6 @@ func MakeRack(heightUnits uint8) *Rack {
 
 		previousSegment = nextSegment
 		rack.Add(nextSegment)
-		rack.Segments = append(rack.Segments, nextSegment)
 	}
 
 	foot := NewRackFoot("foot")
