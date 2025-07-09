@@ -40,7 +40,7 @@ func (render *RenderCmd) Run(globals *globals.Globals) error {
 	}
 	bufferedOutput := bufio.NewWriter(output)
 
-	segmentCount := 2
+	segmentCount := 3
 	shape := rack.MakeRack(uint8(segmentCount))
 	err = shapes.ResolveAnchors(shape.Foot)
 	if err != nil {
