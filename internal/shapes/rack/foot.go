@@ -17,6 +17,7 @@ const (
 	rackFootThicknessBack  = 10
 	rackFootWidth          = rackSpineWidth
 	rackFootWidthWithSideBrace = rackFootWidth + sideBraceWidth
+	rackFootSpacerHeight = 5
 )
 
 type RackFoot struct {
@@ -37,9 +38,11 @@ func NewRackFoot(name string) *RackFoot {
 			rackFootWidthWithSideBrace,
 			primitive.NewPolygon([]mgl64.Vec2{
 				{0, 0},
-				{RackFootThicknessFront, 0},
-				{rackFootThicknessBack, rackFootLengthWithInlay},
-				{0, rackFootLengthWithInlay},
+				{RackFootThicknessFront + rackFootSpacerHeight, 0},
+				{rackFootThicknessBack + rackFootSpacerHeight, rackFootLengthWithInlay},
+				{rackFootSpacerHeight, rackFootLengthWithInlay},
+				{rackFootSpacerHeight, rackSpineThickness + rackSpineInlayWidth},
+				{0, rackSpineThickness + rackSpineInlayWidth},
 			}),
 		),
 	)

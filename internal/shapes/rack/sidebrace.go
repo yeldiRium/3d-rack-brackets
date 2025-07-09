@@ -35,7 +35,7 @@ type SideBrace struct {
 //	0 is the lowest brace.
 //	This is used to calculate the connection point to the rack foot.
 func NewSideBrace(name string, totalHeight, heightUnit uint8) *SideBrace {
-	footOffsetY := float64(totalHeight-heightUnit-1) * rackSegmentHeight
+	footOffsetY := float64(totalHeight-heightUnit-1) * rackSegmentHeight + rackFootSpacerHeight
 	footOffsetZ := math.Sqrt(float64(totalHeight-heightUnit)/float64(totalHeight)) * rackFootLength * 2 / 3
 
 	scaledAttachmentDepth := sideBraceAttachmentDepth * math.Pow(0.8, float64(totalHeight-heightUnit-1))
