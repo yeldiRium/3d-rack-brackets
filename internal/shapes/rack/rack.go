@@ -11,7 +11,7 @@ const (
 
 	rackSpineWidth         = 15.875
 	rackSpineThickness     = 10.0
-	rackSpineInlayWidth    = 2.0
+	rackSpineInlayWidth    = 3.0
 )
 
 type Rack struct {
