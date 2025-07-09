@@ -31,15 +31,20 @@ func MakeRack(heightUnits uint8) *Rack {
 
 	for i := uint8(0); i < heightUnits; i++ {
 		nextSegment := NewRackSegment(fmt.Sprintf("segment-%d", i))
+		nextBrace := NewSideBrace(fmt.Sprintf("sidebrace-%d", i), heightUnits, i)
 
 		if previousSegment != nil {
 			if err := previousSegment.Anchors()["bottom"].Connect(nextSegment.Anchors()["top"], 0); err != nil {
 				panic("failed to connect rack segments. this should not happen")
 			}
 		}
+		if err := nextSegment.Anchors()["left"].Connect(nextBrace.Anchors()["segmentattach"], 0); err != nil {
+			panic("failed to attach side brace to rack segment")
+		}
 
 		previousSegment = nextSegment
 		rack.Add(nextSegment)
+		rack.Add(nextBrace)
 	}
 
 	foot := NewRackFoot("foot")

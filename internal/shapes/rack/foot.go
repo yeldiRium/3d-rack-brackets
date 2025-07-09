@@ -11,10 +11,12 @@ import (
 )
 
 const (
-	rackFootLength         = 170 + rackSpineInlayWidth
+	rackFootLength         = 170
+	rackFootLengthWithInlay = rackFootLength + rackSpineInlayWidth
 	RackFootThicknessFront = 15
 	rackFootThicknessBack  = 10
 	rackFootWidth          = rackSpineWidth
+	rackFootWidthWithSideBrace = rackFootWidth + sideBraceWidth
 )
 
 type RackFoot struct {
@@ -32,12 +34,12 @@ func NewRackFoot(name string) *RackFoot {
 	footBox := primitive.NewRotation(
 		mgl64.Vec3{0, 90, 0},
 		primitive.NewLinearExtrusion(
-			rackFootWidth,
+			rackFootWidthWithSideBrace,
 			primitive.NewPolygon([]mgl64.Vec2{
 				{0, 0},
 				{RackFootThicknessFront, 0},
-				{rackFootThicknessBack, rackFootLength},
-				{0, rackFootLength},
+				{rackFootThicknessBack, rackFootLengthWithInlay},
+				{0, rackFootLengthWithInlay},
 			}),
 		),
 	)
@@ -52,7 +54,7 @@ func NewRackFoot(name string) *RackFoot {
 			"top",
 			rackFoot,
 			primitive.NewTranslation(mgl64.Vec3{
-				0,
+				-sideBraceWidth / 2,
 				(rackSpineThickness / 2) + rackSpineInlayWidth,
 				0,
 			}),
