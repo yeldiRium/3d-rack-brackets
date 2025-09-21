@@ -55,7 +55,7 @@ func initializeProfiling(logger *slog.Logger) error {
 			return fmt.Errorf("failed to open output file for profiling: %w", err)
 		}
 		if err := pprof.StartCPUProfile(file); err != nil {
-			return fmt.Errorf("failed to initialize profiling", err)
+			return fmt.Errorf("failed to initialize profiling: %w", err)
 		}
 	}
 	return nil
