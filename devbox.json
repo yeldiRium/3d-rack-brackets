@@ -23,6 +23,7 @@
       "open":           "openscad ./output/output.scad",
       "profile":        "go build . && ./3d-rack-brackets --cpu-profile=output/render.prof render --production output/output.scad && go tool pprof -http 0.0.0.0:8080 ./3d-rack-brackets ./output/render.prof",
       "render":         "mkdir -p output && go run . render output/output.scad",
+      "render:debug":         "mkdir -p output && go run . --debug render output/output.scad",
       "render:preview": "devbox run render:prod && openscad -o output.png ./output/output.scad",
       "render:prod":    "mkdir -p output && go run . render --production output/output.scad",
       "render:stl":     "devbox run render:prod && openscad -o ./output/output.stl ./output/output.scad",
