@@ -5,7 +5,8 @@
     "golangci-lint@2.0.2",
     "gopls@0.18.1",
     "inotify-tools@4.23.9.0",
-    "openscad@2021.01"
+    "openscad@2021.01",
+    "graphviz@12.2.1"
   ],
   "env": {
     "NIX_HARDENING_ENABLE": ""
@@ -20,6 +21,7 @@
       "test":     "go test ./...",
 
       "open":           "openscad ./output/output.scad",
+      "profile":        "go build . && ./3d-rack-brackets --cpu-profile=output/render.prof render --production output/output.scad && go tool pprof -http 0.0.0.0:8080 ./3d-rack-brackets ./output/render.prof",
       "render":         "mkdir -p output && go run . render output/output.scad",
       "render:preview": "devbox run render:prod && openscad -o output.png ./output/output.scad",
       "render:prod":    "mkdir -p output && go run . render --production output/output.scad",
