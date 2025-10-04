@@ -1,8 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}:
+{ lib, pkgs, ... }:
 let
   appBinaryPath = "./3d-rack-brackets";
   outputScadPath = "./output/output.scad";
@@ -16,7 +12,6 @@ in
     inotify-tools
   ];
 
-  # https://devenv.sh/languages/
   languages.go = {
     enable = true;
     enableHardeningWorkaround = true;
@@ -90,6 +85,25 @@ in
         exec = "${lib.getExe go} test ./...";
       };
     };
+
+  git-hooks.hooks = {
+    shellcheck.enable = true;
+    check-merge-conflicts.enable = true;
+    check-shebang-scripts-are-executable.enable = true;
+    end-of-file-fixer.enable = true;
+    gofmt.enable = true;
+    golangci-lint.enable = true;
+    gotest.enable = true;
+    govet.enable = true;
+    nixfmt-rfc-style.enable = true;
+    staticcheck.enable = true;
+    gitleaks = {
+      enable = true;
+      name = "Gitleaks";
+      entry = "${lib.getExe pkgs.gitleaks} git --pre-commit --redact --staged --verbose";
+      pass_filenames = false;
+    };
+  };
 
   outputs = {
     "3d-rack-brackets" = pkgs.buildGo124Module {
