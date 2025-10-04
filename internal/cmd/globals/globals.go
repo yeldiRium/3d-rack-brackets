@@ -6,7 +6,7 @@ import (
 )
 
 type Globals struct {
-	Debug bool
+	Debug  bool
 	Logger *slog.Logger
 	Stdout io.Writer
 }

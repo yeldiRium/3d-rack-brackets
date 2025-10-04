@@ -18,8 +18,8 @@ import (
 )
 
 type RenderCmd struct {
-	Production bool `short:"p"`
-	Output string `arg:"" type:"path" default:"-"`
+	Production bool   `short:"p"`
+	Output     string `arg:"" type:"path" default:"-"`
 }
 
 func (render *RenderCmd) Run(globals *globals.Globals) error {

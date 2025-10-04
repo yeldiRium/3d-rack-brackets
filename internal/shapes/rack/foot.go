@@ -11,13 +11,13 @@ import (
 )
 
 const (
-	rackFootLength         = 170
-	rackFootLengthWithInlay = rackFootLength + rackSpineInlayWidth
-	RackFootThicknessFront = 15
-	rackFootThicknessBack  = 10
-	rackFootWidth          = rackSpineWidth
+	rackFootLength             = 170
+	rackFootLengthWithInlay    = rackFootLength + rackSpineInlayWidth
+	RackFootThicknessFront     = 15
+	rackFootThicknessBack      = 10
+	rackFootWidth              = rackSpineWidth
 	rackFootWidthWithSideBrace = rackFootWidth + sideBraceWidth
-	rackFootSpacerHeight = 5
+	rackFootSpacerHeight       = 5
 )
 
 type RackFoot struct {

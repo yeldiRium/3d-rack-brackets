@@ -9,15 +9,15 @@ import (
 const (
 	screwRadiusM6 = 3.0
 
-	rackSpineWidth         = 15.875
-	rackSpineThickness     = 10.0
-	rackSpineInlayWidth    = 3.0
+	rackSpineWidth      = 15.875
+	rackSpineThickness  = 10.0
+	rackSpineInlayWidth = 3.0
 )
 
 type Rack struct {
 	primitive.ParentImpl
 	primitive.List
-	Foot     *RackFoot
+	Foot *RackFoot
 }
 
 func MakeRack(heightUnits uint8) *Rack {
