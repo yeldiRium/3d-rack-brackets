@@ -40,7 +40,7 @@ func SetFn(val uint16) {
 	fn = val
 }
 
-// Import SCAD files and fonts
+// Import SCAD files and fonts.
 func Use(file string) {
 	uses = append(uses, file)
 }

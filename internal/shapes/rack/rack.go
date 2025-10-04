@@ -17,6 +17,7 @@ const (
 type Rack struct {
 	primitive.ParentImpl
 	primitive.List
+
 	Foot *RackFoot
 }
 
@@ -29,7 +30,7 @@ func MakeRack(heightUnits uint8) *Rack {
 
 	var previousSegment *RackSegment
 
-	for i := uint8(0); i < heightUnits; i++ {
+	for i := range heightUnits {
 		nextSegment := NewRackSegment(fmt.Sprintf("segment-%d", i))
 		nextBrace := NewSideBrace(fmt.Sprintf("sidebrace-%d", i), heightUnits, i)
 

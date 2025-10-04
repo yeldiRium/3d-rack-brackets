@@ -20,6 +20,7 @@ const (
 
 type SideBrace struct {
 	primitive.ParentImpl
+
 	prefix string
 
 	name     string
@@ -103,6 +104,7 @@ func (sideBrace *SideBrace) SetAnchorTransform(transform primitive.Transform) er
 	}
 
 	sideBrace.anchorTransform = &transform
+
 	return nil
 }
 
@@ -110,23 +112,27 @@ func (sideBrace *SideBrace) GetAnchorTransform() *primitive.Transform {
 	return sideBrace.anchorTransform
 }
 
-func (sideBrace *SideBrace) Disable() primitive.Primitive {
+func (sideBrace *SideBrace) Disable() primitive.Primitive { //nolint:ireturn
 	sideBrace.prefix = "*"
+
 	return sideBrace
 }
 
-func (sideBrace *SideBrace) ShowOnly() primitive.Primitive {
+func (sideBrace *SideBrace) ShowOnly() primitive.Primitive { //nolint:ireturn
 	sideBrace.prefix = "!"
+
 	return sideBrace
 }
 
-func (sideBrace *SideBrace) Highlight() primitive.Primitive {
+func (sideBrace *SideBrace) Highlight() primitive.Primitive { //nolint:ireturn
 	sideBrace.prefix = "#"
+
 	return sideBrace
 }
 
-func (sideBrace *SideBrace) Transparent() primitive.Primitive {
+func (sideBrace *SideBrace) Transparent() primitive.Primitive { //nolint:ireturn
 	sideBrace.prefix = "%"
+
 	return sideBrace
 }
 

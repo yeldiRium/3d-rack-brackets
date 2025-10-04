@@ -7,6 +7,7 @@ import (
 	"github.com/go-gl/mathgl/mgl64"
 	"github.com/ljanyst/ghostscad/primitive"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/yeldiRium/3d-rack-brackets/internal/test"
 )
@@ -14,6 +15,7 @@ import (
 type FooAnchored struct {
 	primitive.ParentImpl
 	primitive.Cube
+
 	name            string
 	anchors         map[string]Anchor
 	anchorTransform *primitive.Transform
@@ -29,6 +31,7 @@ func NewFoo(name string, edge float64) *FooAnchored {
 		"bottom": NewAnchor("bottom", foo, primitive.NewTranslation(mgl64.Vec3{0, 0, -edge / 2}), mgl64.Vec3{0, 0, -1}),
 		"right":  NewAnchor("right", foo, primitive.NewTranslation(mgl64.Vec3{edge / 2, 0, 0}), mgl64.Vec3{1, 0, 0}),
 	}
+
 	return foo
 }
 
@@ -44,6 +47,7 @@ func (foo *FooAnchored) SetAnchorTransform(transform primitive.Transform) error 
 	}
 
 	foo.anchorTransform = &transform
+
 	return nil
 }
 
@@ -52,15 +56,19 @@ func (foo *FooAnchored) GetAnchorTransform() *primitive.Transform {
 }
 
 func TestResolveAnchors(t *testing.T) {
+	t.Parallel()
+
 	t.Run("resolves the anchor transform from one foo to another correctly.", func(t *testing.T) {
+		t.Parallel()
+
 		fooOne := NewFoo("fooOne", 7)
 		fooTwo := NewFoo("fooTwo", 2)
 
 		err := fooOne.Anchors()["bottom"].Connect(fooTwo.Anchors()["right"], 45)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		err = ResolveAnchors(fooOne)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		expectedTransformFooOne := primitive.NewTranslation(mgl64.Vec3{0, 0, 0})
 		expectedTransformFooTwo := primitive.NewTranslation(mgl64.Vec3{})
@@ -78,14 +86,16 @@ func TestResolveAnchors(t *testing.T) {
 	})
 
 	t.Run("resolves a transform correctly for opposite normals", func(t *testing.T) {
+		t.Parallel()
+
 		fooOne := NewFoo("fooOne", 7)
 		fooTwo := NewFoo("fooTwo", 2)
 
 		err := fooOne.Anchors()["bottom"].Connect(fooTwo.Anchors()["top"], 0)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		err = ResolveAnchors(fooOne)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		expectedTransformFooOne := primitive.NewTranslation(mgl64.Vec3{0, 0, 0})
 		expectedTransformFooTwo := primitive.NewTranslation(mgl64.Vec3{})

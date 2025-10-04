@@ -17,6 +17,7 @@ const (
 
 type RackSegment struct {
 	primitive.ParentImpl
+
 	prefix string
 
 	name     string
@@ -63,6 +64,7 @@ func (rackSegment *RackSegment) SetAnchorTransform(transform primitive.Transform
 	}
 
 	rackSegment.anchorTransform = &transform
+
 	return nil
 }
 
@@ -70,23 +72,27 @@ func (rackSegment *RackSegment) GetAnchorTransform() *primitive.Transform {
 	return rackSegment.anchorTransform
 }
 
-func (rackSegment *RackSegment) Disable() primitive.Primitive {
+func (rackSegment *RackSegment) Disable() primitive.Primitive { //nolint:ireturn
 	rackSegment.prefix = "*"
+
 	return rackSegment
 }
 
-func (rackSegment *RackSegment) ShowOnly() primitive.Primitive {
+func (rackSegment *RackSegment) ShowOnly() primitive.Primitive { //nolint:ireturn
 	rackSegment.prefix = "!"
+
 	return rackSegment
 }
 
-func (rackSegment *RackSegment) Highlight() primitive.Primitive {
+func (rackSegment *RackSegment) Highlight() primitive.Primitive { //nolint:ireturn
 	rackSegment.prefix = "#"
+
 	return rackSegment
 }
 
-func (rackSegment *RackSegment) Transparent() primitive.Primitive {
+func (rackSegment *RackSegment) Transparent() primitive.Primitive { //nolint:ireturn
 	rackSegment.prefix = "%"
+
 	return rackSegment
 }
 

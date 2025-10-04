@@ -22,6 +22,7 @@ const (
 
 type RackFoot struct {
 	primitive.ParentImpl
+
 	prefix string
 
 	name     string
@@ -80,6 +81,7 @@ func (foot *RackFoot) SetAnchorTransform(transform primitive.Transform) error {
 	}
 
 	foot.anchorTransform = &transform
+
 	return nil
 }
 
@@ -87,23 +89,27 @@ func (foot *RackFoot) GetAnchorTransform() *primitive.Transform {
 	return foot.anchorTransform
 }
 
-func (foot *RackFoot) Disable() primitive.Primitive {
+func (foot *RackFoot) Disable() primitive.Primitive { //nolint:ireturn
 	foot.prefix = "*"
+
 	return foot
 }
 
-func (foot *RackFoot) ShowOnly() primitive.Primitive {
+func (foot *RackFoot) ShowOnly() primitive.Primitive { //nolint:ireturn
 	foot.prefix = "!"
+
 	return foot
 }
 
-func (foot *RackFoot) Highlight() primitive.Primitive {
+func (foot *RackFoot) Highlight() primitive.Primitive { //nolint:ireturn
 	foot.prefix = "#"
+
 	return foot
 }
 
-func (foot *RackFoot) Transparent() primitive.Primitive {
+func (foot *RackFoot) Transparent() primitive.Primitive { //nolint:ireturn
 	foot.prefix = "%"
+
 	return foot
 }
 

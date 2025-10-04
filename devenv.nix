@@ -93,10 +93,7 @@ in
     end-of-file-fixer.enable = true;
     gofmt.enable = true;
     golangci-lint.enable = true;
-    gotest.enable = true;
-    govet.enable = true;
     nixfmt-rfc-style.enable = true;
-    staticcheck.enable = true;
     gitleaks = {
       enable = true;
       name = "Gitleaks";

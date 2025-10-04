@@ -59,7 +59,7 @@ func (anchor *anchor) Name() string {
 	return anchor.name
 }
 
-func (anchor *anchor) Parent() Anchored {
+func (anchor *anchor) Parent() Anchored { //nolint:ireturn
 	return anchor.parent
 }
 
@@ -124,7 +124,7 @@ type anchorConnection struct {
 	wasResolved bool
 }
 
-func (c *anchorConnection) Target() Anchor {
+func (c *anchorConnection) Target() Anchor { //nolint:ireturn
 	return c.target
 }
 
@@ -203,7 +203,7 @@ func ResolveAnchors(start Anchored) error {
 	return nil
 }
 
-// TODO: fix rotation for parallel vectors
+// TODO: fix rotation for parallel vectors.
 func calculateRotationFromVec3ToVec3(from, to mgl64.Vec3) mgl64.Vec3 {
 	axis := from.Cross(to).Normalize()
 	if math.IsNaN(axis[0]) {
@@ -225,17 +225,18 @@ func calculateRotationFromVec3ToVec3(from, to mgl64.Vec3) mgl64.Vec3 {
 	}
 }
 
-// to find an orthogonal u for v, we need to set u dot v = 0
+// To find an orthogonal u for v, we need to set u dot v = 0
 // u1 * v1 + u2 * v2 + u3 * v3 = 0
 // setting u1 = 1 and u2 = 1 we get
 // v1 + v2 + u3 * v3 = 0
-// u3 = (-v1 - v2) / v3
+// u3 = (-v1 - v2) / v3.
 func findOrthogonal(v mgl64.Vec3) mgl64.Vec3 {
 	z := (-v[0] - v[1]) / v[2]
+
 	return mgl64.Vec3{1, 1, z}
 }
 
-// eulerAngles takes a radians rotation matrix and calculates its radians euler angles
+// eulerAngles takes a radians rotation matrix and calculates its radians euler angles.
 func eulerAngles(rotationMatrix mgl64.Mat4) mgl64.Vec3 {
 	sy := math.Sqrt(rotationMatrix[0]*rotationMatrix[0] + rotationMatrix[1]*rotationMatrix[1])
 

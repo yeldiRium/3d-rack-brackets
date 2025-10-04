@@ -58,6 +58,7 @@ func initializeProfiling(logger *slog.Logger) error {
 			return fmt.Errorf("failed to initialize profiling: %w", err)
 		}
 	}
+
 	return nil
 }
 func stopProfiling() {
