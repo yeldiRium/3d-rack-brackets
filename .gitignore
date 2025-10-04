@@ -1,2 +1,9 @@
 output/
 3d-rack-brackets
+
+# Devenv
+.devenv*
+devenv.local.nix
+
+# pre-commit
+.pre-commit-config.yaml

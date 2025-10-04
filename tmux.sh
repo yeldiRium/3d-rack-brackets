@@ -13,24 +13,21 @@ attach() {
 if ! tmux has-session -t "${session}" 2>/dev/null; then
 	tmux new-session -d -s "${session}" -x "$(tput cols)" -y "$(tput lines)"
 
-	tmux split-window -t "${session}:0.0" -h -l "70%" -b
+	tmux split-window -t "${session}:0.0" -v -l "70%" -b
+	tmux split-window -t "${session}:0.0" -h -l "60%" -b
 
-	tmux split-window -t "${session}:0.1" -v -l "20%" -b
-	tmux split-window -t "${session}:0.2" -v -l "10%" -b
-	tmux split-window -t "${session}:0.3" -v -l "30%" -b
+	tmux split-window -t "${session}:0.1" -v -l "70%" -b
 
 	sleep 1
 
-	tmux send-keys -t "${session}:0.0" " devbox shell" "C-m" "C-l"
-	tmux send-keys -t "${session}:0.1" " devbox shell" "C-m" "C-l"
-	tmux send-keys -t "${session}:0.2" " devbox shell" "C-m" "C-l"
-	tmux send-keys -t "${session}:0.3" " devbox shell" "C-m" "C-l"
-	tmux send-keys -t "${session}:0.4" " devbox shell" "C-m" "C-l"
+	tmux send-keys -t "${session}:0.0" " devenv shell zsh" "C-m" "C-l"
+	tmux send-keys -t "${session}:0.1" " devenv shell zsh" "C-m" "C-l"
+	tmux send-keys -t "${session}:0.2" " devenv shell zsh" "C-m" "C-l"
+	tmux send-keys -t "${session}:0.3" " devenv shell zsh" "C-m" "C-l"
 
 	tmux send-keys -t "${session}:0.0" " nvim" "C-m" "M-1"
-	tmux send-keys -t "${session}:0.1" " git bug termui" "C-m"
-	tmux send-keys -t "${session}:0.2" " devbox run open" "C-m"
-	tmux send-keys -t "${session}:0.3" " devbox run watch" "C-m"
+	tmux send-keys -t "${session}:0.1" " devenv up open" "C-m"
+	tmux send-keys -t "${session}:0.2" " git bug termui" "C-m"
 
 	tmux select-pane -t "${session}:0.0"
 fi

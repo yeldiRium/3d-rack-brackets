@@ -9,7 +9,7 @@ while true; do
   changedRelativePath="$(realpath -m --relative-to="${root}" "${changed}")"
 
   echo "change in ./${changedRelativePath}, rebuilding..."
-  if ! devbox run render; then
+  if ! devenv tasks run app:render; then
     echo "failed to rebuild."
   else
     echo "rebuilt."
