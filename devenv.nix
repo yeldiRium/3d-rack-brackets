@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   appBinaryPath = "./3d-rack-brackets";
   outputScadPath = "./output/output.scad";
@@ -17,21 +22,23 @@ in
     enableHardeningWorkaround = true;
   };
 
-  processes = with pkgs; {
-    docs.exec = "${lib.getExe go} doc -http";
+  processes =
+    with pkgs;
+    lib.optionalAttrs (!config.devenv.isTesting) {
+      docs.exec = "${lib.getExe go} doc -http";
 
-    open = {
-      exec = "${lib.getExe openscad} ${outputScadPath}";
-    };
+      open = {
+        exec = "${lib.getExe openscad} ${outputScadPath}";
+      };
 
-    profile = {
-      exec = "${appBinaryPath} --cpu-profile=./output/render.prof render --production ${outputScadPath} && ${lib.getExe go} tool pprof -http 0.0.0.0:8080 ${appBinaryPath} ./output/render.prof";
-    };
+      profile = {
+        exec = "${appBinaryPath} --cpu-profile=./output/render.prof render --production ${outputScadPath} && ${lib.getExe go} tool pprof -http 0.0.0.0:8080 ${appBinaryPath} ./output/render.prof";
+      };
 
-    watch = {
-      exec = "./build/render-loop.bash";
+      watch = {
+        exec = "./build/render-loop.bash";
+      };
     };
-  };
 
   tasks =
     let
