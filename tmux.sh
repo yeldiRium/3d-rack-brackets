@@ -26,7 +26,7 @@ if ! tmux has-session -t "${session}" 2>/dev/null; then
 	tmux send-keys -t "${session}:0.3" " devenv shell zsh" "C-m" "C-l"
 
 	tmux send-keys -t "${session}:0.0" " nvim" "C-m" "M-1"
-	tmux send-keys -t "${session}:0.1" " devenv up open" "C-m"
+	tmux send-keys -t "${session}:0.1" " devenv up watch" "C-m"
 	tmux send-keys -t "${session}:0.2" " git bug termui" "C-m"
 
 	tmux select-pane -t "${session}:0.0"
